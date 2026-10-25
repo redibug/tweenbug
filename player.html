@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Tweenbug Player</title>
+<style>html,body{margin:0;padding:0;background:#170d24}svg{display:block}</style></head>
+<body>
+<svg id="stage" width="720" height="720" xmlns="http://www.w3.org/2000/svg"></svg>
+<script src="engine.js"></script>
+<script>
+let scene = null, built = null, t = 0, playing = true, last = null;
+async function init() {
+  const q = new URLSearchParams(location.search);
+  const url = q.get('scene') || 'scenes/bugchan-dance.json';
+  scene = await (await fetch(url)).json();
+  built = buildScene(document.getElementById('stage'), scene);
+  window.__scene = scene;
+  window.__setTime = tt => { playing = false; t = tt; poseScene(scene, built, t); };
+  window.__ready = true;
+  requestAnimationFrame(frame);
+}
+function frame(ts) {
+  if (playing && last !== null) { t += (ts - last) / 1000; poseScene(scene, built, t); }
+  last = ts;
+  requestAnimationFrame(frame);
+}
+init();
+</script>
+</body></html>

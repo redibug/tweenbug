@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Tweenbug Editor — v0</title>
+<style>
+  html,body{margin:0;padding:0;background:#17102a;color:#f5d7e8;font-family:system-ui,sans-serif;height:100%}
+  #app{display:flex;height:100vh}
+  #stageWrap{flex:0 0 auto;display:flex;align-items:flex-start;justify-content:center;background:#120a1e;padding:10px}
+  svg{background:#170d24;border-radius:10px;box-shadow:0 4px 30px rgba(0,0,0,.5)}
+  #side{flex:1;display:flex;flex-direction:column;padding:12px;gap:10px;min-width:300px}
+  h1{font-size:17px;margin:0;color:#ff9ec7}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  button{background:#2c2145;color:#f5d7e8;border:1px solid #4a3866;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px}
+  button:hover{background:#3a2c5c} button.on{background:#ff6fae;color:#241126;border-color:#ff6fae}
+  input[type=range]{flex:1;accent-color:#ff6fae}
+  #joints{overflow-y:auto;border:1px solid #372a52;border-radius:8px;padding:6px;flex:0 1 240px;background:#1d1332}
+  .jnt{padding:3px 8px;border-radius:6px;cursor:pointer;font-size:13px;white-space:nowrap}
+  .jnt:hover{background:#2c2145}.jnt.sel{background:#ff6fae;color:#241126}
+  #readout{font-size:13px;color:#d9a8c6;min-height:18px}
+  #tl{width:100%;background:#1d1332;border:1px solid #372a52;border-radius:8px}
+  .hint{font-size:12px;color:#9a83ad;line-height:1.5}
+  #time{font-variant-numeric:tabular-nums;font-size:13px}
+</style></head>
+<body>
+<div id="app">
+  <div id="stageWrap"><svg id="stage" width="720" height="720" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <div id="side">
+    <h1>🐞 Tweenbug editor <span style="color:#9a83ad;font-size:12px">v0</span></h1>
+    <div class="row">
+      <button id="playBtn">⏸ pause</button>
+      <input type="range" id="scrub" min="0" max="8" step="0.0333" value="0">
+      <span id="time">0.00s</span>
+    </div>
+    <div class="row">
+      <button id="keyBtn">◆ set key (selected joint rotation)</button>
+      <button id="saveBtn">💾 save scene</button>
+      <label style="font-size:13px">📂 <input type="file" id="loadFile" accept=".json" style="max-width:150px"></label>
+    </div>
+    <div id="readout">pick a joint, drag on stage to rotate it, ◆ to key it</div>
+    <div id="joints"></div>
+    <canvas id="tl" height="10"></canvas>
+    <div class="hint">
+      The scene is one JSON file — everything you do here is a text edit to it,
+      and anything an AI collaborator writes into it shows up here. Drag with a
+      joint selected to pose it; keys land on its <i>rot</i> track. Timeline:
+      rows are tracks, ticks are keys, click to seek.
+    </div>
+  </div>
+</div>
+<script src="engine.js"></script>
+<script>
+let scene = null, built = null, t = 0, playing = true, last = null;
+let selected = null, override = null; // override: {joint, rot}
+const svg = document.getElementById('stage');
+const $ = id => document.getElementById(id);
+
+async function loadSceneData(data) {
+  scene = data;
+  built = buildScene(svg, scene);
+  $('scrub').max = scene.duration;
+  buildJointList(); drawTimeline(); applyPose();
+  $('readout').textContent = `loaded “${scene.name}” — ${built.joints.size} joints, ${(scene.tracks || []).length} tracks`;
+}
+async function init() {
+  const q = new URLSearchParams(location.search);
+  loadSceneData(await (await fetch(q.get('scene') || 'scenes/bugchan-dance.json')).json());
+  requestAnimationFrame(frame);
+}
+function frame(ts) {
+  if (playing && last !== null && scene) { t = (t + (ts - last) / 1000) % scene.duration; syncTransport(); applyPose(); }
+  last = ts; requestAnimationFrame(frame);
+}
+function syncTransport() { $('scrub').value = t; $('time').textContent = t.toFixed(2) + 's'; drawPlayhead(); }
+
+function applyPose() {
+  if (!scene) return;
+  poseScene(scene, built, t);
+  if (override) composeJoint(override.joint, override.rot);
+  markSelected();
+}
+function composeJoint(name, rot) {
+  const { node, el } = built.joints.get(name);
+  const tt = scene.loop ? t % scene.duration : t;
+  const vals = evaluateTracks(scene, tt);
+  const g = (p, d) => vals.get(name + '.' + p) ?? d;
+  const x = node.at[0] + g('x', 0), y = node.at[1] + g('y', 0);
+  const sc = node.scale || 1, sx = g('sx', 1) * sc, sy = g('sy', 1) * sc;
+  let tr = `translate(${x.toFixed(2)},${y.toFixed(2)})`;
+  if (node.pivot) tr += ` translate(${node.pivot[0]},${node.pivot[1]})`;
+  tr += ` rotate(${rot.toFixed(2)}) scale(${sx.toFixed(3)},${sy.toFixed(3)})`;
+  if (node.pivot) tr += ` translate(${-node.pivot[0]},${-node.pivot[1]})`;
+  el.setAttribute('transform', tr);
+}
+function markSelected() {
+  let ov = svg.querySelector('#selmark');
+  if (!selected) { if (ov) ov.remove(); return; }
+  if (!ov) { ov = document.createElementNS(SVGNS, 'g'); ov.id = 'selmark'; ov.innerHTML = '<circle r="10" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle r="2.6" fill="#ffd166"/>'; svg.appendChild(ov); }
+  const { el } = built.joints.get(selected);
+  const m = el.getCTM();
+  ov.setAttribute('transform', `translate(${m.e.toFixed(1)},${m.f.toFixed(1)})`);
+  svg.appendChild(ov); // keep on top
+}
+function buildJointList() {
+  const box = $('joints'); box.innerHTML = '';
+  const walk = (node, depth) => {
+    const d = document.createElement('div');
+    d.className = 'jnt' + (node.name === selected ? ' sel' : '');
+    d.style.paddingLeft = (8 + depth * 16) + 'px';
+    d.textContent = (depth ? '└ ' : '') + node.name;
+    d.onclick = () => { selected = node.name; override = null; buildJointList(); applyPose(); showReadout(); };
+    box.appendChild(d);
+    for (const ch of node.children || []) if (ch.joint) walk(ch.joint, depth + 1);
+  };
+  walk(scene.rig, 0);
+}
+function showReadout() {
+  if (!selected) return;
+  const vals = evaluateTracks(scene, t % scene.duration);
+  $('readout').textContent = `${selected}.rot = ${(vals.get(selected + '.rot') ?? 0).toFixed(1)}° at ${t.toFixed(2)}s` + (override ? ` — posed to ${override.rot.toFixed(1)}° (◆ to key it)` : '');
+}
+// --- drag to rotate ---
+function svgPoint(evt) {
+  const pt = new DOMPoint(evt.clientX, evt.clientY);
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+let dragging = false;
+svg.addEventListener('pointerdown', e => { if (!selected) return; dragging = true; svg.setPointerCapture(e.pointerId); dragTo(e); });
+svg.addEventListener('pointermove', e => { if (dragging) dragTo(e); });
+svg.addEventListener('pointerup', () => { dragging = false; });
+function dragTo(e) {
+  const { node, el } = built.joints.get(selected);
+  const parent = el.parentElement;
+  const pSvg = svgPoint(e);
+  const inv = parent.getCTM().inverse();
+  const p = new DOMPoint(pSvg.x, pSvg.y).matrixTransform(inv);
+  const vx = p.x - node.at[0], vy = p.y - node.at[1];
+  let rot = Math.atan2(-vx, vy) * 180 / Math.PI;
+  override = { joint: selected, rot };
+  playing = false; $('playBtn').textContent = '▶ play';
+  applyPose(); showReadout();
+}
+// --- keyframing ---
+$('keyBtn').onclick = () => {
+  if (!selected) return;
+  const vals = evaluateTracks(scene, t % scene.duration);
+  const value = override && override.joint === selected ? override.rot : (vals.get(selected + '.rot') ?? 0);
+  const target = selected + '.rot';
+  let tr = (scene.tracks || []).find(x => x.target === target && x.mode !== 'add');
+  if (!tr) { tr = { name: selected + ' keys', target, keys: [] }; scene.tracks.push(tr); }
+  const tk = Math.round(t * 30) / 30;
+  const ex = tr.keys.find(k => Math.abs(k[0] - tk) < 0.001);
+  if (ex) { ex[1] = +value.toFixed(2); if (ex.length < 3) ex[2] = 'sine'; }
+  else tr.keys.push([tk, +value.toFixed(2), 'sine']);
+  tr.keys.sort((a, b) => a[0] - b[0]);
+  override = null; applyPose(); drawTimeline(); showReadout();
+  $('readout').textContent = `keyed ${target} = ${value.toFixed(1)}° at ${tk.toFixed(2)}s — save to keep it`;
+};
+// --- transport ---
+$('playBtn').onclick = () => { playing = !playing; $('playBtn').textContent = playing ? '⏸ pause' : '▶ play'; };
+$('scrub').oninput = e => { t = +e.target.value; playing = false; $('playBtn').textContent = '▶ play'; $('time').textContent = t.toFixed(2) + 's'; applyPose(); drawPlayhead(); showReadout(); };
+// --- timeline ---
+function drawTimeline() {
+  const c = $('tl'), tracks = scene.tracks || [];
+  c.height = Math.max(20, tracks.length * 15 + 8); c.width = c.clientWidth || 600;
+  const x = c.getContext('2d'); x.clearRect(0, 0, c.width, c.height);
+  x.font = '10px system-ui';
+  tracks.forEach((tr, i) => {
+    const y = 6 + i * 15;
+    x.fillStyle = '#9a83ad'; x.fillText(tr.target + (tr.mode === 'add' ? ' +' : ''), 4, y + 8);
+    x.fillStyle = tr.mode === 'add' ? '#8be89a' : '#ffd166';
+    for (const k of tr.keys) { const px = 130 + (k[0] / scene.duration) * (c.width - 140); x.fillRect(px - 1.5, y + 2, 3, 7); }
+  });
+  drawPlayhead();
+}
+function drawPlayhead() {
+  const c = $('tl'); if (!scene) return; const x = c.getContext('2d');
+  // redraw cheaply: full draw keeps it simple at this size
+  drawTimelineBase(x, c);
+}
+function drawTimelineBase(x, c) {
+  const tracks = scene.tracks || [];
+  x.clearRect(0, 0, c.width, c.height); x.font = '10px system-ui';
+  tracks.forEach((tr, i) => {
+    const y = 6 + i * 15;
+    x.fillStyle = '#9a83ad'; x.fillText(tr.target + (tr.mode === 'add' ? ' +' : ''), 4, y + 8);
+    x.fillStyle = tr.mode === 'add' ? '#8be89a' : '#ffd166';
+    for (const k of tr.keys) { const px = 130 + (k[0] / scene.duration) * (c.width - 140); x.fillRect(px - 1.5, y + 2, 3, 7); }
+  });
+  const px = 130 + (t / scene.duration) * (c.width - 140);
+  x.strokeStyle = '#ff6fae'; x.beginPath(); x.moveTo(px, 0); x.lineTo(px, c.height); x.stroke();
+}
+$('tl').onclick = e => {
+  const r = $('tl').getBoundingClientRect();
+  const frac = (e.clientX - r.left - 130) / (r.width - 140);
+  if (frac < 0 || frac > 1) return;
+  t = frac * scene.duration; playing = false; $('playBtn').textContent = '▶ play';
+  syncTransport(); applyPose(); showReadout();
+};
+// --- save / load ---
+$('saveBtn').onclick = () => {
+  const blob = new Blob([JSON.stringify(scene, null, 1)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (scene.name || 'scene').toLowerCase().replace(/\s+/g, '-') + '.json';
+  a.click(); URL.revokeObjectURL(a.href);
+};
+$('loadFile').onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  loadSceneData(JSON.parse(await f.text()));
+};
+window.__ed = { select: n => { selected = n; buildJointList(); applyPose(); showReadout(); }, get scene() { return scene; }, setT: tt => { t = tt; applyPose(); } };
+init();
+</script>
+</body></html>

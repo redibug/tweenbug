@@ -1,0 +1,2040 @@
+{
+ "format": "tweenbug-scene/0",
+ "name": "Bugchan Dance",
+ "duration": 8,
+ "loop": true,
+ "fps": 30,
+ "stage": {
+  "width": 720,
+  "height": 720,
+  "defs": "\n  <radialGradient id=\"bgGrad\" cx=\"50%\" cy=\"38%\" r=\"80%\">\n    <stop offset=\"0%\" stop-color=\"#3a2152\"></stop><stop offset=\"55%\" stop-color=\"#241536\"></stop><stop offset=\"100%\" stop-color=\"#120a1e\"></stop>\n  </radialGradient>\n  <linearGradient id=\"hairGrad\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">\n    <stop offset=\"0%\" stop-color=\"#ffc7e0\"></stop><stop offset=\"60%\" stop-color=\"#ff9ec7\"></stop><stop offset=\"100%\" stop-color=\"#ff82b8\"></stop>\n  </linearGradient>\n  <linearGradient id=\"hairGradD\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">\n    <stop offset=\"0%\" stop-color=\"#ff9ec7\"></stop><stop offset=\"100%\" stop-color=\"#f06ba6\"></stop>\n  </linearGradient>\n  <radialGradient id=\"irisGrad\" cx=\"50%\" cy=\"50%\" r=\"50%\">\n    <stop offset=\"0%\" stop-color=\"#b388ff\"></stop><stop offset=\"35%\" stop-color=\"#6ec6ff\"></stop>\n    <stop offset=\"62%\" stop-color=\"#8be89a\"></stop><stop offset=\"82%\" stop-color=\"#ffe066\"></stop><stop offset=\"100%\" stop-color=\"#ff8a5c\"></stop>\n  </radialGradient>\n  <radialGradient id=\"spotGrad\" cx=\"50%\" cy=\"50%\" r=\"50%\">\n    <stop offset=\"0%\" stop-color=\"#ff9ec7\" stop-opacity=\"0.20\"></stop><stop offset=\"100%\" stop-color=\"#ff9ec7\" stop-opacity=\"0\"></stop>\n  </radialGradient>\n",
+  "backdrop": "<rect xmlns=\"http://www.w3.org/2000/svg\" width=\"720\" height=\"720\" fill=\"url(#bgGrad)\"/><ellipse xmlns=\"http://www.w3.org/2000/svg\" cx=\"360\" cy=\"330\" rx=\"330\" ry=\"330\" fill=\"url(#spotGrad)\"/>",
+  "fx": [
+   {
+    "type": "shadow",
+    "source": "root.y"
+   },
+   {
+    "type": "sparkles",
+    "count": 9
+   }
+  ]
+ },
+ "rig": {
+  "name": "root",
+  "at": [
+   360,
+   466
+  ],
+  "scale": 1.28,
+  "children": [
+   {
+    "joint": {
+     "name": "hips",
+     "at": [
+      0,
+      0
+     ],
+     "children": [
+      {
+       "joint": {
+        "name": "legL",
+        "at": [
+         -17,
+         2
+        ],
+        "children": [
+         {
+          "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-11,-2 h22 v34 q0,8 -8,8 h-6 q-8,0 -8,-8 z\" fill=\"#ffe8d6\"/>"
+         },
+         {
+          "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-11,20 h22 v30 q0,8 -8,8 h-6 q-8,0 -8,-8 z\" fill=\"#2a2430\"/>"
+         },
+         {
+          "joint": {
+           "name": "kneeL",
+           "at": [
+            0,
+            48
+           ],
+           "children": [
+            {
+             "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-10,0 h20 v40 q0,7 -7,7 h-6 q-7,0 -7,-7 z\" fill=\"#2a2430\"/>"
+            },
+            {
+             "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-13,44 q0,-6 6,-6 h20 q10,0 14,6 q3,5 -2,7 q-16,3 -32,1 q-6,-1 -6,-8 z\" fill=\"#1d1824\"/>"
+            },
+            {
+             "part": "<circle xmlns=\"http://www.w3.org/2000/svg\" cx=\"3\" cy=\"42\" r=\"3.4\" fill=\"#ff8fc7\"/>"
+            }
+           ]
+          }
+         }
+        ]
+       }
+      },
+      {
+       "joint": {
+        "name": "legR",
+        "at": [
+         17,
+         2
+        ],
+        "children": [
+         {
+          "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-11,-2 h22 v34 q0,8 -8,8 h-6 q-8,0 -8,-8 z\" fill=\"#ffe8d6\"/>"
+         },
+         {
+          "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-11,20 h22 v30 q0,8 -8,8 h-6 q-8,0 -8,-8 z\" fill=\"#2a2430\"/>"
+         },
+         {
+          "joint": {
+           "name": "kneeR",
+           "at": [
+            0,
+            48
+           ],
+           "children": [
+            {
+             "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-10,0 h20 v40 q0,7 -7,7 h-6 q-7,0 -7,-7 z\" fill=\"#2a2430\"/>"
+            },
+            {
+             "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-13,44 q0,-6 6,-6 h20 q10,0 14,6 q3,5 -2,7 q-16,3 -32,1 q-6,-1 -6,-8 z\" fill=\"#1d1824\"/>"
+            },
+            {
+             "part": "<circle xmlns=\"http://www.w3.org/2000/svg\" cx=\"3\" cy=\"42\" r=\"3.4\" fill=\"#ff8fc7\"/>"
+            }
+           ]
+          }
+         }
+        ]
+       }
+      },
+      {
+       "joint": {
+        "name": "skirt",
+        "at": [
+         0,
+         -8
+        ],
+        "children": [
+         {
+          "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-40,-16 h80 l14,40 q-14,7 -20,0 q-6,7 -13,0 q-6,7 -14,0 q-6,7 -13,0 q-6,7 -14,0 q-6,7 -20,0 z\" fill=\"#372d42\" stroke=\"#241d2e\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/>"
+         },
+         {
+          "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-46,16 q46,12 92,0 l3,8 q-49,13 -98,0 z\" fill=\"#ff8fc7\" opacity=\"0.85\"/>"
+         }
+        ]
+       }
+      },
+      {
+       "joint": {
+        "name": "torso",
+        "at": [
+         0,
+         -6
+        ],
+        "children": [
+         {
+          "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-37,-82 q37,-10 74,0 l5,52 q2,14 -10,16 h-68 q-12,-2 -10,-16 z\" fill=\"#ff9ec7\" stroke=\"#e87aa9\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/>"
+         },
+         {
+          "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-13,-84 h26 l-3,36 q-10,5 -20,0 z\" fill=\"#2a2430\"/>"
+         },
+         {
+          "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-37,-82 q37,-10 74,0 l2,14 q-39,-9 -78,0 z\" fill=\"#ffb3d4\"/>"
+         },
+         {
+          "part": "<g xmlns=\"http://www.w3.org/2000/svg\" transform=\"translate(0,-38)\">\n      <path d=\"M-3,-3 l-22,-11 q-5,12 0,22 l22,-8 z\" fill=\"#ff6fae\" stroke=\"#e04f92\" stroke-width=\"2\" stroke-linejoin=\"round\"/>\n      <path d=\"M3,-3 l22,-11 q5,12 0,22 l-22,-8 z\" fill=\"#ff6fae\" stroke=\"#e04f92\" stroke-width=\"2\" stroke-linejoin=\"round\"/>\n      <circle r=\"6.5\" fill=\"#ff8fc7\" stroke=\"#e04f92\" stroke-width=\"2\"/>\n    </g>"
+         },
+         {
+          "joint": {
+           "name": "head",
+           "at": [
+            0,
+            -92
+           ],
+           "children": [
+            {
+             "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-63,-30 q-6,-66 63,-68 q69,2 63,68 q5,38 -6,58 l-16,0 q6,-30 2,-52 q-56,16 -114,0 q-4,22 2,52 l-16,0 q-11,-20 -6,-58 z\" fill=\"url(#hairGradD)\"/>"
+            },
+            {
+             "joint": {
+              "name": "tailL",
+              "at": [
+               -52,
+               -58
+              ],
+              "children": [
+               {
+                "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-8,-8 q-26,6 -24,44 q1,26 8,44 l-4,44 q10,10 20,-2 q10,-40 6,-84 q-2,-40 -14,-54 z\" fill=\"url(#hairGradD)\" stroke=\"#ef77ab\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/>"
+               },
+               {
+                "joint": {
+                 "name": "tailTipL",
+                 "at": [
+                  -2,
+                  58
+                 ],
+                 "children": [
+                  {
+                   "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-13,-4 q-4,34 4,58 q3,12 12,4 q10,-34 4,-60 q-10,-8 -20,-2 z\" fill=\"url(#hairGrad)\" stroke=\"#ef77ab\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/>"
+                  }
+                 ]
+                }
+               },
+               {
+                "part": "<g xmlns=\"http://www.w3.org/2000/svg\" transform=\"translate(-4,-2)\">\n          <circle r=\"10\" fill=\"#e5443c\" stroke=\"#b92c22\" stroke-width=\"2\"/>\n          <path d=\"M0,-10 v20\" stroke=\"#2a2430\" stroke-width=\"2.4\"/>\n          <circle cx=\"-4.5\" cy=\"-3.5\" r=\"1.9\" fill=\"#2a2430\"/><circle cx=\"4.5\" cy=\"1\" r=\"1.9\" fill=\"#2a2430\"/><circle cx=\"-3.5\" cy=\"4.5\" r=\"1.9\" fill=\"#2a2430\"/>\n        </g>"
+               }
+              ]
+             }
+            },
+            {
+             "joint": {
+              "name": "tailR",
+              "at": [
+               52,
+               -58
+              ],
+              "children": [
+               {
+                "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M8,-8 q26,6 24,44 q-1,26 -8,44 l4,44 q-10,10 -20,-2 q-10,-40 -6,-84 q2,-40 14,-54 z\" fill=\"url(#hairGradD)\" stroke=\"#ef77ab\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/>"
+               },
+               {
+                "joint": {
+                 "name": "tailTipR",
+                 "at": [
+                  2,
+                  58
+                 ],
+                 "children": [
+                  {
+                   "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M13,-4 q4,34 -4,58 q-3,12 -12,4 q-10,-34 -4,-60 q10,-8 20,-2 z\" fill=\"url(#hairGrad)\" stroke=\"#ef77ab\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/>"
+                  }
+                 ]
+                }
+               },
+               {
+                "part": "<g xmlns=\"http://www.w3.org/2000/svg\" transform=\"translate(4,-2)\">\n          <circle r=\"10\" fill=\"#e5443c\" stroke=\"#b92c22\" stroke-width=\"2\"/>\n          <path d=\"M0,-10 v20\" stroke=\"#2a2430\" stroke-width=\"2.4\"/>\n          <circle cx=\"4.5\" cy=\"-3.5\" r=\"1.9\" fill=\"#2a2430\"/><circle cx=\"-4.5\" cy=\"1\" r=\"1.9\" fill=\"#2a2430\"/><circle cx=\"3.5\" cy=\"4.5\" r=\"1.9\" fill=\"#2a2430\"/>\n        </g>"
+               }
+              ]
+             }
+            },
+            {
+             "part": "<ellipse xmlns=\"http://www.w3.org/2000/svg\" cx=\"-55\" cy=\"4\" rx=\"8\" ry=\"11\" fill=\"#ffe8d6\"/>"
+            },
+            {
+             "part": "<ellipse xmlns=\"http://www.w3.org/2000/svg\" cx=\"55\" cy=\"4\" rx=\"8\" ry=\"11\" fill=\"#ffe8d6\"/>"
+            },
+            {
+             "part": "<ellipse xmlns=\"http://www.w3.org/2000/svg\" cx=\"0\" cy=\"0\" rx=\"56\" ry=\"52\" fill=\"#ffe8d6\"/>"
+            },
+            {
+             "joint": {
+              "name": "eyeL",
+              "at": [
+               -22,
+               -2
+              ],
+              "children": [
+               {
+                "part": "<ellipse xmlns=\"http://www.w3.org/2000/svg\" cx=\"0\" cy=\"0\" rx=\"10.5\" ry=\"14\" fill=\"#fff\"/>"
+               },
+               {
+                "part": "<circle xmlns=\"http://www.w3.org/2000/svg\" cx=\"0\" cy=\"1\" r=\"7.6\" fill=\"url(#irisGrad)\"/>"
+               },
+               {
+                "part": "<circle xmlns=\"http://www.w3.org/2000/svg\" cx=\"0\" cy=\"1.5\" r=\"3.6\" fill=\"#241d2e\"/>"
+               },
+               {
+                "part": "<circle xmlns=\"http://www.w3.org/2000/svg\" cx=\"-2.6\" cy=\"-2.6\" r=\"2.3\" fill=\"#fff\"/>"
+               },
+               {
+                "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-11,-8 q11,-10 22,0\" fill=\"none\" stroke=\"#2a2430\" stroke-width=\"3.6\" stroke-linecap=\"round\"/>"
+               }
+              ]
+             }
+            },
+            {
+             "joint": {
+              "name": "eyeR",
+              "at": [
+               22,
+               -2
+              ],
+              "children": [
+               {
+                "part": "<ellipse xmlns=\"http://www.w3.org/2000/svg\" cx=\"0\" cy=\"0\" rx=\"10.5\" ry=\"14\" fill=\"#fff\"/>"
+               },
+               {
+                "part": "<circle xmlns=\"http://www.w3.org/2000/svg\" cx=\"0\" cy=\"1\" r=\"7.6\" fill=\"url(#irisGrad)\"/>"
+               },
+               {
+                "part": "<circle xmlns=\"http://www.w3.org/2000/svg\" cx=\"0\" cy=\"1.5\" r=\"3.6\" fill=\"#241d2e\"/>"
+               },
+               {
+                "part": "<circle xmlns=\"http://www.w3.org/2000/svg\" cx=\"-2.6\" cy=\"-2.6\" r=\"2.3\" fill=\"#fff\"/>"
+               },
+               {
+                "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-11,-8 q11,-10 22,0\" fill=\"none\" stroke=\"#2a2430\" stroke-width=\"3.6\" stroke-linecap=\"round\"/>"
+               }
+              ]
+             }
+            },
+            {
+             "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-30,-24 q7,-5 14,-2\" fill=\"none\" stroke=\"#c9577f\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>"
+            },
+            {
+             "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M16,-26 q7,-3 14,2\" fill=\"none\" stroke=\"#c9577f\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>"
+            },
+            {
+             "part": "<ellipse xmlns=\"http://www.w3.org/2000/svg\" cx=\"-35\" cy=\"16\" rx=\"9\" ry=\"5\" fill=\"#ff9eb8\" opacity=\"0.55\"/>"
+            },
+            {
+             "part": "<ellipse xmlns=\"http://www.w3.org/2000/svg\" cx=\"35\" cy=\"16\" rx=\"9\" ry=\"5\" fill=\"#ff9eb8\" opacity=\"0.55\"/>"
+            },
+            {
+             "joint": {
+              "name": "mouth",
+              "at": [
+               0,
+               0
+              ],
+              "pivot": [
+               0,
+               17
+              ],
+              "children": [
+               {
+                "part": "<ellipse xmlns=\"http://www.w3.org/2000/svg\" cx=\"0\" cy=\"17\" rx=\"5.5\" ry=\"6.8\" fill=\"#a13b4a\"/>"
+               },
+               {
+                "part": "<ellipse xmlns=\"http://www.w3.org/2000/svg\" cx=\"0\" cy=\"20.5\" rx=\"3.6\" ry=\"2.8\" fill=\"#ff8fa3\"/>"
+               }
+              ]
+             }
+            },
+            {
+             "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-57,-18 q-4,-44 57,-46 q61,2 57,46 q-10,-14 -20,-4 q2,-16 -8,-20 q-4,12 -14,14 q0,-14 -12,-16 q-2,12 -12,14 q2,-14 -8,-18 q-8,10 -16,6 q-8,-2 -10,6 q-10,-8 -16,2 z\" fill=\"url(#hairGrad)\" stroke=\"#ef77ab\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/>"
+            },
+            {
+             "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-6,-64 q4,-16 16,-20 q-2,12 -8,18\" fill=\"none\" stroke=\"#ff82b8\" stroke-width=\"5\" stroke-linecap=\"round\"/>"
+            },
+            {
+             "part": "<g xmlns=\"http://www.w3.org/2000/svg\" transform=\"translate(34,-38) rotate(18)\">\n        <circle r=\"8.5\" fill=\"#e5443c\" stroke=\"#b92c22\" stroke-width=\"2\"/>\n        <path d=\"M0,-8.5 v17\" stroke=\"#2a2430\" stroke-width=\"2.2\"/>\n        <circle cx=\"-3.8\" cy=\"-3\" r=\"1.6\" fill=\"#2a2430\"/><circle cx=\"3.8\" cy=\"1\" r=\"1.6\" fill=\"#2a2430\"/><circle cx=\"-3\" cy=\"4\" r=\"1.6\" fill=\"#2a2430\"/>\n      </g>"
+            }
+           ]
+          }
+         },
+         {
+          "joint": {
+           "name": "armL",
+           "at": [
+            -37,
+            -76
+           ],
+           "children": [
+            {
+             "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-10,-6 q-13,4 -11,20 l4,30 q1,10 11,9 q9,-1 8,-11 l-3,-28 q-1,-12 -9,-20 z\" fill=\"#ff9ec7\" stroke=\"#e87aa9\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/>"
+            },
+            {
+             "joint": {
+              "name": "elbowL",
+              "at": [
+               0,
+               46
+              ],
+              "children": [
+               {
+                "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-9,0 h18 v30 q0,9 -9,9 q-9,0 -9,-9 z\" fill=\"#ffe8d6\"/>"
+               },
+               {
+                "part": "<circle xmlns=\"http://www.w3.org/2000/svg\" cx=\"0\" cy=\"42\" r=\"9.5\" fill=\"#ffe8d6\"/>"
+               }
+              ]
+             }
+            }
+           ]
+          }
+         },
+         {
+          "joint": {
+           "name": "armR",
+           "at": [
+            37,
+            -76
+           ],
+           "children": [
+            {
+             "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M10,-6 q13,4 11,20 l-4,30 q-1,10 -11,9 q-9,-1 -8,-11 l3,-28 q1,-12 9,-20 z\" fill=\"#ff9ec7\" stroke=\"#e87aa9\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/>"
+            },
+            {
+             "joint": {
+              "name": "elbowR",
+              "at": [
+               0,
+               46
+              ],
+              "children": [
+               {
+                "part": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"M-9,0 h18 v30 q0,9 -9,9 q-9,0 -9,-9 z\" fill=\"#ffe8d6\"/>"
+               },
+               {
+                "part": "<circle xmlns=\"http://www.w3.org/2000/svg\" cx=\"0\" cy=\"42\" r=\"9.5\" fill=\"#ffe8d6\"/>"
+               }
+              ]
+             }
+            }
+           ]
+          }
+         }
+        ]
+       }
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "tracks": [
+  {
+   "target": "root.y",
+   "keys": [
+    [
+     0,
+     -9,
+     "sine"
+    ],
+    [
+     0.25,
+     0,
+     "sine"
+    ],
+    [
+     0.5,
+     -9,
+     "sine"
+    ],
+    [
+     0.75,
+     0,
+     "sine"
+    ],
+    [
+     1,
+     -9,
+     "sine"
+    ],
+    [
+     1.25,
+     0,
+     "sine"
+    ],
+    [
+     1.5,
+     -9,
+     "sine"
+    ],
+    [
+     1.75,
+     0,
+     "sine"
+    ],
+    [
+     2,
+     -9,
+     "sine"
+    ],
+    [
+     2.25,
+     0,
+     "sine"
+    ],
+    [
+     2.5,
+     -9,
+     "sine"
+    ],
+    [
+     2.75,
+     0,
+     "sine"
+    ],
+    [
+     3,
+     -9,
+     "sine"
+    ],
+    [
+     3.25,
+     0,
+     "sine"
+    ],
+    [
+     3.5,
+     -9,
+     "sine"
+    ],
+    [
+     3.75,
+     0,
+     "sine"
+    ],
+    [
+     4,
+     -9,
+     "sine"
+    ],
+    [
+     4.25,
+     0,
+     "sine"
+    ],
+    [
+     4.5,
+     -9,
+     "sine"
+    ],
+    [
+     4.75,
+     0,
+     "sine"
+    ],
+    [
+     5,
+     -9,
+     "sine"
+    ],
+    [
+     5.25,
+     0,
+     "sine"
+    ],
+    [
+     5.5,
+     -9,
+     "sine"
+    ],
+    [
+     5.75,
+     0,
+     "sine"
+    ],
+    [
+     6,
+     -9,
+     "sine"
+    ],
+    [
+     6.25,
+     0,
+     "sine"
+    ],
+    [
+     6.5,
+     -9,
+     "sine"
+    ],
+    [
+     6.75,
+     0,
+     "sine"
+    ],
+    [
+     7,
+     -9,
+     "sine"
+    ],
+    [
+     7.25,
+     0,
+     "sine"
+    ],
+    [
+     7.5,
+     -9,
+     "sine"
+    ],
+    [
+     7.75,
+     0,
+     "sine"
+    ],
+    [
+     8,
+     -9,
+     "sine"
+    ],
+    [
+     8,
+     0,
+     "sine"
+    ]
+   ]
+  },
+  {
+   "target": "kneeL.rot",
+   "keys": [
+    [
+     0,
+     13,
+     "sine"
+    ],
+    [
+     0.25,
+     2,
+     "sine"
+    ],
+    [
+     0.5,
+     13,
+     "sine"
+    ],
+    [
+     0.75,
+     2,
+     "sine"
+    ],
+    [
+     1,
+     13,
+     "sine"
+    ],
+    [
+     1.25,
+     2,
+     "sine"
+    ],
+    [
+     1.5,
+     13,
+     "sine"
+    ],
+    [
+     1.75,
+     2,
+     "sine"
+    ],
+    [
+     2,
+     13,
+     "sine"
+    ],
+    [
+     2.25,
+     2,
+     "sine"
+    ],
+    [
+     2.5,
+     13,
+     "sine"
+    ],
+    [
+     2.75,
+     2,
+     "sine"
+    ],
+    [
+     3,
+     13,
+     "sine"
+    ],
+    [
+     3.25,
+     2,
+     "sine"
+    ],
+    [
+     3.5,
+     13,
+     "sine"
+    ],
+    [
+     3.75,
+     2,
+     "sine"
+    ],
+    [
+     4,
+     13,
+     "sine"
+    ],
+    [
+     4.25,
+     2,
+     "sine"
+    ],
+    [
+     4.5,
+     13,
+     "sine"
+    ],
+    [
+     4.75,
+     2,
+     "sine"
+    ],
+    [
+     5,
+     13,
+     "sine"
+    ],
+    [
+     5.25,
+     2,
+     "sine"
+    ],
+    [
+     5.5,
+     13,
+     "sine"
+    ],
+    [
+     5.75,
+     2,
+     "sine"
+    ],
+    [
+     6,
+     13,
+     "sine"
+    ],
+    [
+     6.25,
+     2,
+     "sine"
+    ],
+    [
+     6.5,
+     13,
+     "sine"
+    ],
+    [
+     6.75,
+     2,
+     "sine"
+    ],
+    [
+     7,
+     13,
+     "sine"
+    ],
+    [
+     7.25,
+     2,
+     "sine"
+    ],
+    [
+     7.5,
+     13,
+     "sine"
+    ],
+    [
+     7.75,
+     2,
+     "sine"
+    ],
+    [
+     8,
+     13,
+     "sine"
+    ],
+    [
+     8,
+     2,
+     "sine"
+    ]
+   ]
+  },
+  {
+   "target": "kneeR.rot",
+   "keys": [
+    [
+     0,
+     13,
+     "sine"
+    ],
+    [
+     0.25,
+     2,
+     "sine"
+    ],
+    [
+     0.5,
+     13,
+     "sine"
+    ],
+    [
+     0.75,
+     2,
+     "sine"
+    ],
+    [
+     1,
+     13,
+     "sine"
+    ],
+    [
+     1.25,
+     2,
+     "sine"
+    ],
+    [
+     1.5,
+     13,
+     "sine"
+    ],
+    [
+     1.75,
+     2,
+     "sine"
+    ],
+    [
+     2,
+     13,
+     "sine"
+    ],
+    [
+     2.25,
+     2,
+     "sine"
+    ],
+    [
+     2.5,
+     13,
+     "sine"
+    ],
+    [
+     2.75,
+     2,
+     "sine"
+    ],
+    [
+     3,
+     13,
+     "sine"
+    ],
+    [
+     3.25,
+     2,
+     "sine"
+    ],
+    [
+     3.5,
+     13,
+     "sine"
+    ],
+    [
+     3.75,
+     2,
+     "sine"
+    ],
+    [
+     4,
+     13,
+     "sine"
+    ],
+    [
+     4.25,
+     2,
+     "sine"
+    ],
+    [
+     4.5,
+     13,
+     "sine"
+    ],
+    [
+     4.75,
+     2,
+     "sine"
+    ],
+    [
+     5,
+     13,
+     "sine"
+    ],
+    [
+     5.25,
+     2,
+     "sine"
+    ],
+    [
+     5.5,
+     13,
+     "sine"
+    ],
+    [
+     5.75,
+     2,
+     "sine"
+    ],
+    [
+     6,
+     13,
+     "sine"
+    ],
+    [
+     6.25,
+     2,
+     "sine"
+    ],
+    [
+     6.5,
+     13,
+     "sine"
+    ],
+    [
+     6.75,
+     2,
+     "sine"
+    ],
+    [
+     7,
+     13,
+     "sine"
+    ],
+    [
+     7.25,
+     2,
+     "sine"
+    ],
+    [
+     7.3,
+     4,
+     "back"
+    ],
+    [
+     7.55,
+     34,
+     "sine"
+    ],
+    [
+     8,
+     34
+    ]
+   ]
+  },
+  {
+   "target": "mouth.sy",
+   "keys": [
+    [
+     0,
+     1.22,
+     "sine"
+    ],
+    [
+     0.25,
+     1,
+     "sine"
+    ],
+    [
+     0.5,
+     1.22,
+     "sine"
+    ],
+    [
+     0.75,
+     1,
+     "sine"
+    ],
+    [
+     1,
+     1.22,
+     "sine"
+    ],
+    [
+     1.25,
+     1,
+     "sine"
+    ],
+    [
+     1.5,
+     1.22,
+     "sine"
+    ],
+    [
+     1.75,
+     1,
+     "sine"
+    ],
+    [
+     2,
+     1.22,
+     "sine"
+    ],
+    [
+     2.25,
+     1,
+     "sine"
+    ],
+    [
+     2.5,
+     1.22,
+     "sine"
+    ],
+    [
+     2.75,
+     1,
+     "sine"
+    ],
+    [
+     3,
+     1.22,
+     "sine"
+    ],
+    [
+     3.25,
+     1,
+     "sine"
+    ],
+    [
+     3.5,
+     1.22,
+     "sine"
+    ],
+    [
+     3.75,
+     1,
+     "sine"
+    ],
+    [
+     4,
+     1.22,
+     "sine"
+    ],
+    [
+     4.25,
+     1,
+     "sine"
+    ],
+    [
+     4.5,
+     1.22,
+     "sine"
+    ],
+    [
+     4.75,
+     1,
+     "sine"
+    ],
+    [
+     5,
+     1.22,
+     "sine"
+    ],
+    [
+     5.25,
+     1,
+     "sine"
+    ],
+    [
+     5.5,
+     1.22,
+     "sine"
+    ],
+    [
+     5.75,
+     1,
+     "sine"
+    ],
+    [
+     6,
+     1.22,
+     "sine"
+    ],
+    [
+     6.25,
+     1,
+     "sine"
+    ],
+    [
+     6.5,
+     1.22,
+     "sine"
+    ],
+    [
+     6.75,
+     1,
+     "sine"
+    ],
+    [
+     7,
+     1.22,
+     "sine"
+    ],
+    [
+     7.25,
+     1,
+     "sine"
+    ],
+    [
+     7.5,
+     1.22,
+     "sine"
+    ],
+    [
+     7.75,
+     1,
+     "sine"
+    ],
+    [
+     8,
+     1.22,
+     "sine"
+    ],
+    [
+     8,
+     1,
+     "sine"
+    ]
+   ]
+  },
+  {
+   "target": "hips.rot",
+   "keys": [
+    [
+     0,
+     -4.5,
+     "sine"
+    ],
+    [
+     1,
+     4.5,
+     "sine"
+    ],
+    [
+     2,
+     -4.5,
+     "sine"
+    ],
+    [
+     3,
+     4.5,
+     "sine"
+    ],
+    [
+     4,
+     -4.5,
+     "sine"
+    ],
+    [
+     5,
+     4.5,
+     "sine"
+    ],
+    [
+     6,
+     -4.5,
+     "sine"
+    ],
+    [
+     7,
+     4.5,
+     "sine"
+    ],
+    [
+     8,
+     -4.5,
+     "sine"
+    ]
+   ]
+  },
+  {
+   "target": "torso.rot",
+   "keys": [
+    [
+     0,
+     2.5,
+     "sine"
+    ],
+    [
+     1,
+     -2.5,
+     "sine"
+    ],
+    [
+     2,
+     2.5,
+     "sine"
+    ],
+    [
+     3,
+     -2.5,
+     "sine"
+    ],
+    [
+     4,
+     0,
+     "sine"
+    ],
+    [
+     5,
+     0,
+     "sine"
+    ],
+    [
+     6,
+     2,
+     "sine"
+    ],
+    [
+     7,
+     -2,
+     "sine"
+    ],
+    [
+     8,
+     2.5
+    ]
+   ]
+  },
+  {
+   "target": "head.rot",
+   "keys": [
+    [
+     0,
+     -5,
+     "sine"
+    ],
+    [
+     1,
+     3,
+     "sine"
+    ],
+    [
+     2,
+     -3,
+     "sine"
+    ],
+    [
+     3,
+     4,
+     "sine"
+    ],
+    [
+     4,
+     0,
+     "sine"
+    ],
+    [
+     5,
+     0,
+     "sine"
+    ],
+    [
+     6,
+     -4,
+     "sine"
+    ],
+    [
+     7,
+     -6,
+     "sine"
+    ],
+    [
+     7.5,
+     -9,
+     "back"
+    ],
+    [
+     8,
+     -9
+    ]
+   ]
+  },
+  {
+   "target": "head.y",
+   "keys": [
+    [
+     0,
+     0,
+     "sine"
+    ],
+    [
+     0.5,
+     2,
+     "sine"
+    ],
+    [
+     1,
+     0,
+     "sine"
+    ],
+    [
+     1.5,
+     2,
+     "sine"
+    ],
+    [
+     2,
+     0,
+     "sine"
+    ],
+    [
+     2.5,
+     2,
+     "sine"
+    ],
+    [
+     3,
+     0,
+     "sine"
+    ],
+    [
+     3.5,
+     2,
+     "sine"
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     6,
+     0,
+     "sine"
+    ],
+    [
+     6.5,
+     2,
+     "sine"
+    ],
+    [
+     7,
+     0,
+     "sine"
+    ],
+    [
+     7.5,
+     1,
+     "sine"
+    ],
+    [
+     8,
+     1
+    ]
+   ]
+  },
+  {
+   "target": "root.x",
+   "keys": [
+    [
+     0,
+     0
+    ],
+    [
+     2,
+     0,
+     "sine"
+    ],
+    [
+     2.5,
+     -15,
+     "sine"
+    ],
+    [
+     3,
+     0,
+     "sine"
+    ],
+    [
+     3.5,
+     15,
+     "sine"
+    ],
+    [
+     4,
+     0,
+     "sine"
+    ],
+    [
+     8,
+     0
+    ]
+   ]
+  },
+  {
+   "target": "legL.rot",
+   "keys": [
+    [
+     0,
+     0
+    ],
+    [
+     2.4,
+     0,
+     "sine"
+    ],
+    [
+     2.6,
+     7,
+     "sine"
+    ],
+    [
+     2.9,
+     0,
+     "sine"
+    ],
+    [
+     3.4,
+     0,
+     "sine"
+    ],
+    [
+     3.6,
+     -6,
+     "sine"
+    ],
+    [
+     3.9,
+     0
+    ],
+    [
+     8,
+     0
+    ]
+   ]
+  },
+  {
+   "target": "legR.rot",
+   "keys": [
+    [
+     0,
+     0
+    ],
+    [
+     2.4,
+     0,
+     "sine"
+    ],
+    [
+     2.6,
+     -6,
+     "sine"
+    ],
+    [
+     2.9,
+     0,
+     "sine"
+    ],
+    [
+     3.4,
+     0,
+     "sine"
+    ],
+    [
+     3.6,
+     7,
+     "sine"
+    ],
+    [
+     3.9,
+     0
+    ],
+    [
+     7.3,
+     0,
+     "back"
+    ],
+    [
+     7.55,
+     -17,
+     "sine"
+    ],
+    [
+     8,
+     -17
+    ]
+   ]
+  },
+  {
+   "target": "armR.rot",
+   "keys": [
+    [
+     0,
+     -18,
+     "sine"
+    ],
+    [
+     0.45,
+     -132,
+     "out"
+    ],
+    [
+     1.6,
+     -132,
+     "sine"
+    ],
+    [
+     1.95,
+     -18,
+     "sine"
+    ],
+    [
+     2,
+     -18,
+     "back"
+    ],
+    [
+     2.5,
+     60,
+     "back"
+    ],
+    [
+     3,
+     -18,
+     "back"
+    ],
+    [
+     3.5,
+     60,
+     "back"
+    ],
+    [
+     4,
+     -18,
+     "sine"
+    ],
+    [
+     4.3,
+     -88,
+     "out"
+    ],
+    [
+     5.7,
+     -88,
+     "sine"
+    ],
+    [
+     6,
+     -20,
+     "sine"
+    ],
+    [
+     6.35,
+     -142,
+     "back"
+    ],
+    [
+     8,
+     -142
+    ]
+   ]
+  },
+  {
+   "target": "elbowR.rot",
+   "keys": [
+    [
+     0,
+     8,
+     "sine"
+    ],
+    [
+     0.5,
+     8,
+     "sine"
+    ],
+    [
+     0.75,
+     34,
+     "sine"
+    ],
+    [
+     1,
+     8,
+     "sine"
+    ],
+    [
+     1.25,
+     34,
+     "sine"
+    ],
+    [
+     1.5,
+     8,
+     "sine"
+    ],
+    [
+     1.95,
+     8,
+     "sine"
+    ],
+    [
+     2,
+     46,
+     "back"
+    ],
+    [
+     2.5,
+     8,
+     "back"
+    ],
+    [
+     3,
+     46,
+     "back"
+    ],
+    [
+     3.5,
+     8,
+     "back"
+    ],
+    [
+     4,
+     30,
+     "sine"
+    ],
+    [
+     4.3,
+     6,
+     "out"
+    ],
+    [
+     5.7,
+     6,
+     "sine"
+    ],
+    [
+     6,
+     20,
+     "sine"
+    ],
+    [
+     6.35,
+     10,
+     "back"
+    ],
+    [
+     8,
+     10
+    ]
+   ]
+  },
+  {
+   "target": "armL.rot",
+   "keys": [
+    [
+     0,
+     26,
+     "sine"
+    ],
+    [
+     2,
+     26,
+     "back"
+    ],
+    [
+     2.5,
+     -60,
+     "back"
+    ],
+    [
+     3,
+     26,
+     "back"
+    ],
+    [
+     3.5,
+     -60,
+     "back"
+    ],
+    [
+     4,
+     26,
+     "sine"
+    ],
+    [
+     4.3,
+     88,
+     "out"
+    ],
+    [
+     5.7,
+     88,
+     "sine"
+    ],
+    [
+     6,
+     20,
+     "sine"
+    ],
+    [
+     6.35,
+     142,
+     "back"
+    ],
+    [
+     8,
+     142
+    ]
+   ]
+  },
+  {
+   "target": "elbowL.rot",
+   "keys": [
+    [
+     0,
+     -34,
+     "sine"
+    ],
+    [
+     2,
+     -8,
+     "back"
+    ],
+    [
+     2.5,
+     -46,
+     "back"
+    ],
+    [
+     3,
+     -8,
+     "back"
+    ],
+    [
+     3.5,
+     -46,
+     "back"
+    ],
+    [
+     4,
+     -20,
+     "sine"
+    ],
+    [
+     4.3,
+     -6,
+     "out"
+    ],
+    [
+     5.7,
+     -6,
+     "sine"
+    ],
+    [
+     6,
+     -20,
+     "sine"
+    ],
+    [
+     6.35,
+     -10,
+     "back"
+    ],
+    [
+     8,
+     -10
+    ]
+   ]
+  },
+  {
+   "target": "root.sx",
+   "keys": [
+    [
+     0,
+     1
+    ],
+    [
+     3.98,
+     1,
+     "sine"
+    ],
+    [
+     4.14,
+     0.06,
+     "sine"
+    ],
+    [
+     4.3,
+     -1,
+     "sine"
+    ],
+    [
+     4.98,
+     -1,
+     "sine"
+    ],
+    [
+     5.14,
+     -0.06,
+     "sine"
+    ],
+    [
+     5.3,
+     1,
+     "sine"
+    ],
+    [
+     8,
+     1
+    ]
+   ]
+  },
+  {
+   "name": "hop",
+   "target": "root.y",
+   "mode": "add",
+   "keys": [
+    [
+     0,
+     0
+    ],
+    [
+     3.98,
+     0,
+     "out"
+    ],
+    [
+     4.14,
+     -17,
+     "sine"
+    ],
+    [
+     4.3,
+     0,
+     "sine"
+    ],
+    [
+     4.98,
+     0,
+     "out"
+    ],
+    [
+     5.14,
+     -17,
+     "sine"
+    ],
+    [
+     5.3,
+     0
+    ],
+    [
+     8,
+     0
+    ]
+   ]
+  },
+  {
+   "target": "tailL.rot",
+   "keys": [
+    [
+     0,
+     0
+    ],
+    [
+     3.9,
+     0,
+     "out"
+    ],
+    [
+     4.3,
+     -32,
+     "sine"
+    ],
+    [
+     4.65,
+     0,
+     "sine"
+    ],
+    [
+     4.95,
+     0,
+     "out"
+    ],
+    [
+     5.3,
+     -32,
+     "sine"
+    ],
+    [
+     5.65,
+     0
+    ],
+    [
+     8,
+     0
+    ]
+   ]
+  },
+  {
+   "target": "tailR.rot",
+   "keys": [
+    [
+     0,
+     0
+    ],
+    [
+     3.9,
+     0,
+     "out"
+    ],
+    [
+     4.3,
+     32,
+     "sine"
+    ],
+    [
+     4.65,
+     0,
+     "sine"
+    ],
+    [
+     4.95,
+     0,
+     "out"
+    ],
+    [
+     5.3,
+     32,
+     "sine"
+    ],
+    [
+     5.65,
+     0
+    ],
+    [
+     8,
+     0
+    ]
+   ]
+  },
+  {
+   "target": "eyeL.sy",
+   "keys": [
+    [
+     0,
+     1
+    ],
+    [
+     2.26,
+     1,
+     "lin"
+    ],
+    [
+     2.33,
+     0.08,
+     "lin"
+    ],
+    [
+     2.4,
+     1,
+     "sine"
+    ],
+    [
+     5.66,
+     1,
+     "lin"
+    ],
+    [
+     5.73,
+     0.08,
+     "lin"
+    ],
+    [
+     5.8,
+     1,
+     "sine"
+    ],
+    [
+     8,
+     1
+    ]
+   ]
+  },
+  {
+   "target": "eyeR.sy",
+   "keys": [
+    [
+     0,
+     1
+    ],
+    [
+     2.26,
+     1,
+     "lin"
+    ],
+    [
+     2.33,
+     0.08,
+     "lin"
+    ],
+    [
+     2.4,
+     1,
+     "sine"
+    ],
+    [
+     5.66,
+     1,
+     "lin"
+    ],
+    [
+     5.73,
+     0.08,
+     "lin"
+    ],
+    [
+     5.8,
+     1,
+     "sine"
+    ],
+    [
+     8,
+     1
+    ]
+   ]
+  }
+ ],
+ "procedural": [
+  {
+   "type": "wave",
+   "target": "tailL.rot",
+   "freq": 1,
+   "phase": -0.9,
+   "amp": 6,
+   "mode": "add"
+  },
+  {
+   "type": "wave",
+   "target": "tailR.rot",
+   "freq": 1,
+   "phase": -0.9,
+   "amp": -6,
+   "mode": "add"
+  },
+  {
+   "type": "wave",
+   "target": "tailTipL.rot",
+   "freq": 1,
+   "phase": -1.8,
+   "amp": 9,
+   "mode": "add"
+  },
+  {
+   "type": "wave",
+   "target": "tailTipR.rot",
+   "freq": 1,
+   "phase": -1.8,
+   "amp": -9,
+   "mode": "add"
+  },
+  {
+   "type": "wave",
+   "target": "skirt.rot",
+   "freq": 1,
+   "phase": -0.55,
+   "amp": 4.5,
+   "mode": "add"
+  },
+  {
+   "type": "follow",
+   "target": "skirt.rot",
+   "source": "hips.rot",
+   "scale": -0.5,
+   "mode": "add"
+  }
+ ]
+}
