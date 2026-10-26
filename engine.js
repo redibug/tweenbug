@@ -47,16 +47,32 @@ function buildJoint(node, joints) {
   const g = document.createElementNS(SVGNS, 'g');
   g.id = 'j_' + node.name;
   g.dataset.joint = node.name;
-  joints.set(node.name, { node, el: g });
+  const entry = { node, el: g, parts: [] };
+  joints.set(node.name, entry);
   for (const ch of node.children || []) {
     if (ch.joint) g.appendChild(buildJoint(ch.joint, joints));
-    else if (ch.part) {
-      const tmp = document.createElementNS(SVGNS, 'g');
-      tmp.innerHTML = ch.part;
-      while (tmp.firstChild) g.appendChild(tmp.firstChild);
+    else if (ch.part !== undefined) {
+      // Each part gets a wrapper so it can carry its own offset (`at`, in
+      // joint space) — that offset is how the artwork slides on its hinge.
+      const wrap = document.createElementNS(SVGNS, 'g');
+      wrap.setAttribute('class', 'tb-part');
+      wrap.dataset.partJoint = node.name;
+      wrap.dataset.partIdx = entry.parts.length;
+      if (ch.at) wrap.setAttribute('transform', `translate(${ch.at[0]},${ch.at[1]})`);
+      wrap.innerHTML = ch.part;
+      g.appendChild(wrap);
+      entry.parts.push({ node: ch, el: wrap });
     }
   }
   return g;
+}
+
+// Keep part wrapper transforms in sync with the scene data (rig edits).
+function syncParts(entry) {
+  for (const p of entry.parts || []) {
+    if (p.node.at) p.el.setAttribute('transform', `translate(${p.node.at[0]},${p.node.at[1]})`);
+    else p.el.removeAttribute('transform');
+  }
 }
 
 // Build the whole scene into an <svg> element. Returns { svg, joints, sparkles }.
@@ -101,7 +117,9 @@ function poseScene(scene, built, t) {
   const tt = scene.loop ? t % scene.duration : Math.min(t, scene.duration);
   const vals = evaluateTracks(scene, tt);
   const get = (name, prop) => vals.get(name + '.' + prop) ?? DEFAULTS[prop];
-  for (const [name, { node, el }] of built.joints) {
+  for (const [name, entry] of built.joints) {
+    const { node, el } = entry;
+    syncParts(entry);
     const x = node.at[0] + get(name, 'x'), y = node.at[1] + get(name, 'y');
     const rot = get(name, 'rot');
     const sc = node.scale || 1;
@@ -128,6 +146,21 @@ function poseScene(scene, built, t) {
     const sc = Math.sin(life * Math.PI) * s.s;
     s.el.setAttribute('transform', `translate(${x.toFixed(1)},${y.toFixed(1)}) rotate(${(life * 80).toFixed(1)}) scale(${sc.toFixed(3)})`);
     s.el.setAttribute('opacity', (Math.sin(life * Math.PI) * 0.95).toFixed(2));
+  }
+}
+
+// Bind/rest pose: rig transforms only, no tracks, no procedural — the pose
+// the editor's rig mode shows while connections are being tuned.
+function poseRest(scene, built) {
+  for (const entry of built.joints.values()) {
+    const { node, el } = entry;
+    syncParts(entry);
+    const sc = node.scale || 1;
+    let tr = `translate(${node.at[0]},${node.at[1]})`;
+    if (node.pivot) tr += ` translate(${node.pivot[0]},${node.pivot[1]})`;
+    tr += ` scale(${sc},${sc})`;
+    if (node.pivot) tr += ` translate(${-node.pivot[0]},${-node.pivot[1]})`;
+    el.setAttribute('transform', tr);
   }
 }
 

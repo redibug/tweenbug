@@ -18,12 +18,25 @@
   #tl{width:100%;background:#1d1332;border:1px solid #372a52;border-radius:8px}
   .hint{font-size:12px;color:#9a83ad;line-height:1.5}
   #time{font-variant-numeric:tabular-nums;font-size:13px}
+  #rigov line{stroke:#ff8fc7;stroke-width:1.6;opacity:.55;pointer-events:none}
+  #rigov .piv{fill:#ff6fae;stroke:#241126;stroke-width:1.6;cursor:grab}
+  #rigov .piv.sel{fill:#ffd166}
+  #rigov .partbox{fill:none;stroke:#8be89a;stroke-width:1.4;stroke-dasharray:5 4;opacity:.75;pointer-events:none}
+  #rigov .partbox.on{stroke:#ffd166;opacity:1}
+  #rigov .parthandle{fill:#8be89a;stroke:#241126;stroke-width:1.4;cursor:grab}
+  #rigov .parthandle.on{fill:#ffd166}
+  .tb-part{cursor:grab}
 </style></head>
 <body>
 <div id="app">
   <div id="stageWrap"><svg id="stage" width="720" height="720" xmlns="http://www.w3.org/2000/svg"></svg></div>
   <div id="side">
     <h1>🐞 Tweenbug editor <span style="color:#9a83ad;font-size:12px">v0</span></h1>
+    <div class="row">
+      <button id="animBtn" class="on">🎞 animate</button>
+      <button id="rigBtn">🦴 rig</button>
+      <span class="hint">animate: pose + key · rig: fix how parts connect</span>
+    </div>
     <div class="row">
       <button id="playBtn">⏸ pause</button>
       <input type="range" id="scrub" min="0" max="8" step="0.0333" value="0">
@@ -49,11 +62,13 @@
 <script>
 let scene = null, built = null, t = 0, playing = true, last = null;
 let selected = null, override = null; // override: {joint, rot}
+let mode = 'animate'; // 'animate' | 'rig'
+let activePart = -1; // selected joint's part index being tuned in rig mode; -1 = the pivot
 const svg = document.getElementById('stage');
 const $ = id => document.getElementById(id);
 
 async function loadSceneData(data) {
-  scene = data;
+  scene = data; activePart = -1;
   built = buildScene(svg, scene);
   $('scrub').max = scene.duration;
   buildJointList(); drawTimeline(); applyPose();
@@ -65,13 +80,14 @@ async function init() {
   requestAnimationFrame(frame);
 }
 function frame(ts) {
-  if (playing && last !== null && scene) { t = (t + (ts - last) / 1000) % scene.duration; syncTransport(); applyPose(); }
+  if (playing && mode === 'animate' && last !== null && scene) { t = (t + (ts - last) / 1000) % scene.duration; syncTransport(); applyPose(); }
   last = ts; requestAnimationFrame(frame);
 }
 function syncTransport() { $('scrub').value = t; $('time').textContent = t.toFixed(2) + 's'; drawPlayhead(); }
 
 function applyPose() {
   if (!scene) return;
+  if (mode === 'rig') { poseRest(scene, built); markSelected(); drawRigOverlay(); return; }
   poseScene(scene, built, t);
   if (override) composeJoint(override.joint, override.rot);
   markSelected();
@@ -112,6 +128,7 @@ function buildJointList() {
   walk(scene.rig, 0);
 }
 function showReadout() {
+  if (mode === 'rig') { rigReadout(); return; }
   if (!selected) return;
   const vals = evaluateTracks(scene, t % scene.duration);
   $('readout').textContent = `${selected}.rot = ${(vals.get(selected + '.rot') ?? 0).toFixed(1)}° at ${t.toFixed(2)}s` + (override ? ` — posed to ${override.rot.toFixed(1)}° (◆ to key it)` : '');
@@ -122,9 +139,15 @@ function svgPoint(evt) {
   return pt.matrixTransform(svg.getScreenCTM().inverse());
 }
 let dragging = false;
-svg.addEventListener('pointerdown', e => { if (!selected) return; dragging = true; svg.setPointerCapture(e.pointerId); dragTo(e); });
-svg.addEventListener('pointermove', e => { if (dragging) dragTo(e); });
-svg.addEventListener('pointerup', () => { dragging = false; });
+svg.addEventListener('pointerdown', e => {
+  if (mode === 'rig') { rigDown(e); return; }
+  if (!selected) return; dragging = true; svg.setPointerCapture(e.pointerId); dragTo(e);
+});
+svg.addEventListener('pointermove', e => {
+  if (mode === 'rig') { rigMove(e); return; }
+  if (dragging) dragTo(e);
+});
+svg.addEventListener('pointerup', () => { dragging = false; rigDrag = null; });
 function dragTo(e) {
   const { node, el } = built.joints.get(selected);
   const parent = el.parentElement;
@@ -137,8 +160,169 @@ function dragTo(e) {
   playing = false; $('playBtn').textContent = '▶ play';
   applyPose(); showReadout();
 }
+// --- rig mode: tune how parts connect ---
+const r1 = v => Math.round(v * 10) / 10;
+const fmtPt = a => `[${a.map(v => +(+v).toFixed(1)).join(', ')}]`;
+function partChildren(node) { return (node.children || []).filter(c => c.part !== undefined); }
+
+function setMode(m) {
+  mode = m; activePart = -1; override = null;
+  $('animBtn').classList.toggle('on', m === 'animate');
+  $('rigBtn').classList.toggle('on', m === 'rig');
+  if (m === 'rig') {
+    playing = false; $('playBtn').textContent = '▶ play';
+    $('readout').textContent = 'rig mode — the puppet holds its bind pose. drag a pink dot to move a hinge (the art stays put), drag the art itself to slide it on its hinge, ⇧+drag a dot moves the whole joint. arrow keys nudge the hinge (or the clicked part).';
+  }
+  applyPose(); showReadout();
+}
+$('animBtn').onclick = () => setMode('animate');
+$('rigBtn').onclick = () => setMode('rig');
+
+function rigReadout() {
+  if (!selected) { $('readout').textContent = 'rig mode: pick a joint from the list, or click a pivot dot / a piece of art'; return; }
+  const { node } = built.joints.get(selected);
+  const pcs = partChildren(node);
+  let s = `${selected} — hinge at ${fmtPt(node.at)}`;
+  if (node.pivot) s += `, spins around ${fmtPt(node.pivot)} inside`;
+  if (activePart >= 0 && pcs[activePart]) s += ` · part ${activePart + 1} offset ${fmtPt(pcs[activePart].at || [0, 0])}`;
+  else if (pcs.length) s += ` · ${pcs.length} part(s) — click the art to slide it on the hinge`;
+  $('readout').textContent = s + ' · 💾 save scene to keep rig edits';
+}
+
+function drawRigOverlay() {
+  let ov = svg.querySelector('#rigov');
+  if (mode !== 'rig') { if (ov) ov.remove(); return; }
+  if (!ov) { ov = document.createElementNS(SVGNS, 'g'); ov.id = 'rigov'; }
+  ov.innerHTML = '';
+  const pos = new Map();
+  for (const [name, { el }] of built.joints) { const m = el.getCTM(); pos.set(name, { x: m.e, y: m.f }); }
+  const walk = node => {
+    for (const ch of node.children || []) if (ch.joint) {
+      const a = pos.get(node.name), b = pos.get(ch.joint.name);
+      const l = document.createElementNS(SVGNS, 'line');
+      l.setAttribute('x1', a.x); l.setAttribute('y1', a.y); l.setAttribute('x2', b.x); l.setAttribute('y2', b.y);
+      ov.appendChild(l);
+      walk(ch.joint);
+    }
+  };
+  walk(scene.rig);
+  if (selected) {
+    const entry = built.joints.get(selected);
+    entry.parts.forEach((p, i) => {
+      try {
+        const bb = p.el.getBBox(), m = p.el.getCTM();
+        const r = document.createElementNS(SVGNS, 'rect');
+        r.setAttribute('x', bb.x); r.setAttribute('y', bb.y); r.setAttribute('width', bb.width); r.setAttribute('height', bb.height);
+        r.setAttribute('transform', `matrix(${m.a},${m.b},${m.c},${m.d},${m.e},${m.f})`);
+        r.setAttribute('class', 'partbox' + (i === activePart ? ' on' : ''));
+        ov.appendChild(r);
+      } catch (err) { /* empty part draws no box */ }
+      const o = p.node.at || [0, 0];
+      const pt = new DOMPoint(o[0], o[1]).matrixTransform(entry.el.getCTM());
+      const h = document.createElementNS(SVGNS, 'circle');
+      h.setAttribute('cx', pt.x); h.setAttribute('cy', pt.y); h.setAttribute('r', 5.5);
+      h.setAttribute('class', 'parthandle' + (i === activePart ? ' on' : ''));
+      h.dataset.partJoint = selected; h.dataset.partIdx = i;
+      ov.appendChild(h);
+    });
+  }
+  for (const [name, p] of pos) {
+    const c = document.createElementNS(SVGNS, 'circle');
+    c.setAttribute('cx', p.x); c.setAttribute('cy', p.y); c.setAttribute('r', name === selected ? 8 : 5.5);
+    c.setAttribute('class', 'piv' + (name === selected ? ' sel' : ''));
+    c.dataset.piv = name;
+    ov.appendChild(c);
+  }
+  svg.appendChild(ov);
+}
+
+let rigDrag = null;
+function parentSpacePoint(evt, el) {
+  const p = svgPoint(evt);
+  const parent = el.parentElement;
+  if (!parent || parent === svg) return { x: p.x, y: p.y };
+  const q = new DOMPoint(p.x, p.y).matrixTransform(parent.getCTM().inverse());
+  return { x: q.x, y: q.y };
+}
+function localSpacePoint(evt, el) {
+  const p = svgPoint(evt);
+  const q = new DOMPoint(p.x, p.y).matrixTransform(el.getCTM().inverse());
+  return { x: q.x, y: q.y };
+}
+function rigDown(e) {
+  const pivEl = e.target.closest ? e.target.closest('[data-piv]') : null;
+  const partEl = e.target.closest ? e.target.closest('[data-part-joint]') : null;
+  if (pivEl) {
+    const name = pivEl.dataset.piv;
+    selected = name; activePart = -1; buildJointList();
+    const { node, el } = built.joints.get(name);
+    const kids = [];
+    for (const ch of node.children || []) {
+      if (ch.joint) kids.push({ o: ch.joint, start: [...ch.joint.at] });
+      else if (ch.part !== undefined) { if (!ch.at) ch.at = [0, 0]; kids.push({ o: ch, start: [...ch.at] }); }
+    }
+    rigDrag = { kind: 'pivot', name, whole: e.shiftKey, start: parentSpacePoint(e, el), startAt: [...node.at], startPivot: node.pivot ? [...node.pivot] : null, kids, scale: node.scale || 1 };
+  } else if (partEl) {
+    const name = partEl.dataset.partJoint, idx = +partEl.dataset.partIdx;
+    const entry = built.joints.get(name);
+    const p = entry && entry.parts[idx];
+    if (!p) return;
+    selected = name; activePart = idx; buildJointList();
+    if (!p.node.at) p.node.at = [0, 0];
+    rigDrag = { kind: 'part', name, idx, start: localSpacePoint(e, entry.el), startAt: [...p.node.at] };
+  } else return;
+  svg.setPointerCapture(e.pointerId);
+  applyPose(); rigReadout();
+  e.preventDefault();
+}
+function rigMove(e) {
+  if (!rigDrag) return;
+  if (rigDrag.kind === 'pivot') {
+    const { node, el } = built.joints.get(rigDrag.name);
+    const cur = parentSpacePoint(e, el);
+    const dx = cur.x - rigDrag.start.x, dy = cur.y - rigDrag.start.y;
+    node.at = [r1(rigDrag.startAt[0] + dx), r1(rigDrag.startAt[1] + dy)];
+    if (!rigDrag.whole) {
+      // hinge moves, artwork stays: children + part offsets shift the other way
+      const dlx = -dx / rigDrag.scale, dly = -dy / rigDrag.scale;
+      for (const k of rigDrag.kids) k.o.at = [r1(k.start[0] + dlx), r1(k.start[1] + dly)];
+      if (rigDrag.startPivot) node.pivot = [r1(rigDrag.startPivot[0] + dlx), r1(rigDrag.startPivot[1] + dly)];
+    }
+  } else {
+    const entry = built.joints.get(rigDrag.name);
+    const cur = localSpacePoint(e, entry.el);
+    const dx = cur.x - rigDrag.start.x, dy = cur.y - rigDrag.start.y;
+    entry.parts[rigDrag.idx].node.at = [r1(rigDrag.startAt[0] + dx), r1(rigDrag.startAt[1] + dy)];
+  }
+  applyPose(); rigReadout();
+}
+window.addEventListener('keydown', e => {
+  if (mode !== 'rig' || !selected || !e.key.startsWith('Arrow')) return;
+  if (e.target.tagName === 'INPUT') return;
+  const step = e.shiftKey ? 10 : 1;
+  const d = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[e.key];
+  if (!d) return;
+  const { node } = built.joints.get(selected);
+  const pcs = partChildren(node);
+  if (activePart >= 0 && pcs[activePart]) {
+    const ch = pcs[activePart];
+    if (!ch.at) ch.at = [0, 0];
+    ch.at = [r1(ch.at[0] + d[0]), r1(ch.at[1] + d[1])];
+  } else {
+    node.at = [r1(node.at[0] + d[0]), r1(node.at[1] + d[1])];
+    const dl = [-d[0] / (node.scale || 1), -d[1] / (node.scale || 1)];
+    for (const ch of node.children || []) {
+      if (ch.joint) ch.joint.at = [r1(ch.joint.at[0] + dl[0]), r1(ch.joint.at[1] + dl[1])];
+      else if (ch.part !== undefined) { if (!ch.at) ch.at = [0, 0]; ch.at = [r1(ch.at[0] + dl[0]), r1(ch.at[1] + dl[1])]; }
+    }
+    if (node.pivot) node.pivot = [r1(node.pivot[0] + dl[0]), r1(node.pivot[1] + dl[1])];
+  }
+  e.preventDefault(); applyPose(); rigReadout();
+});
+
 // --- keyframing ---
 $('keyBtn').onclick = () => {
+  if (mode === 'rig') { $('readout').textContent = 'keys belong to animate mode — rig edits are saved with the scene'; return; }
   if (!selected) return;
   const vals = evaluateTracks(scene, t % scene.duration);
   const value = override && override.joint === selected ? override.rot : (vals.get(selected + '.rot') ?? 0);
@@ -154,7 +338,7 @@ $('keyBtn').onclick = () => {
   $('readout').textContent = `keyed ${target} = ${value.toFixed(1)}° at ${tk.toFixed(2)}s — save to keep it`;
 };
 // --- transport ---
-$('playBtn').onclick = () => { playing = !playing; $('playBtn').textContent = playing ? '⏸ pause' : '▶ play'; };
+$('playBtn').onclick = () => { if (mode === 'rig') setMode('animate'); playing = !playing; $('playBtn').textContent = playing ? '⏸ pause' : '▶ play'; };
 $('scrub').oninput = e => { t = +e.target.value; playing = false; $('playBtn').textContent = '▶ play'; $('time').textContent = t.toFixed(2) + 's'; applyPose(); drawPlayhead(); showReadout(); };
 // --- timeline ---
 function drawTimeline() {
@@ -206,7 +390,7 @@ $('loadFile').onchange = async e => {
   const f = e.target.files[0]; if (!f) return;
   loadSceneData(JSON.parse(await f.text()));
 };
-window.__ed = { select: n => { selected = n; buildJointList(); applyPose(); showReadout(); }, get scene() { return scene; }, setT: tt => { t = tt; applyPose(); } };
+window.__ed = { select: n => { selected = n; buildJointList(); applyPose(); showReadout(); }, get scene() { return scene; }, setT: tt => { t = tt; applyPose(); }, setMode: m => setMode(m), get mode() { return mode; }, get activePart() { return activePart; } };
 init();
 </script>
 </body></html>

@@ -1,0 +1,26 @@
+import puppeteer from 'puppeteer-core';
+import { spawn } from 'node:child_process';
+const EXE = '/home/hatch/workspace/bos-playtest/chrome-headless-shell/linux-156.0.8078.47/chrome-headless-shell-linux64/chrome-headless-shell';
+const server = spawn('python3', ['-m', 'http.server', '8943', '--bind', '127.0.0.1'], { cwd: '/home/hatch/workspace/tweenbug', stdio: 'ignore' });
+await new Promise(r => setTimeout(r, 700));
+const browser = await puppeteer.launch({ executablePath: EXE, args: ['--no-sandbox', '--window-size=1280,860'] });
+const page = await browser.newPage();
+await page.setViewport({ width: 1280, height: 860 });
+page.on('pageerror', e => console.log('[pageerror]', e.message));
+await page.goto('http://127.0.0.1:8943/editor.html', { waitUntil: 'load', timeout: 60000 });
+await page.waitForFunction('window.__ed && window.__ed.scene', { timeout: 30000 });
+await page.click('#playBtn'); // pause: t must not drift during the drag (pre-existing race)
+await page.evaluate('__ed.setT(1.0); __ed.select("armR")');
+const piv = await page.evaluate('jointScreenPos(built, "armR")');
+console.log('armR pivot at', JSON.stringify(piv));
+await page.mouse.move(piv.x, piv.y);
+await page.mouse.down();
+await page.mouse.move(piv.x + 130, piv.y - 110, { steps: 8 });
+await page.mouse.up();
+const readout = await page.evaluate('document.getElementById("readout").textContent');
+console.log('after drag:', readout);
+await page.click('#keyBtn');
+const keyed = await page.evaluate(`(() => { const tr = __ed.scene.tracks.find(x => x.target === 'armR.rot' && x.mode !== 'add'); return JSON.stringify(tr.keys.filter(k => Math.abs(k[0] - 1.0) < 0.02)); })()`);
+console.log('key written at t=1.0:', keyed);
+await page.screenshot({ path: '/home/hatch/workspace/tweenbug/check_editor.png' });
+await browser.close(); server.kill();

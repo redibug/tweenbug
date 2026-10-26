@@ -81,6 +81,13 @@ where it appears in `children`.
 - `part`: a string of SVG markup — one shape or a group. Parts are artwork;
   joints are structure. A hand-drawn puppet maps 1:1: each drawn piece
   becomes a `part` under the joint that moves it.
+- A part entry may also carry `"at": [x, y]` — an offset for the artwork
+  inside its joint's space (default `[0, 0]`). This is how art slides on its
+  hinge without the hinge moving. The editor's **rig mode** writes it: drag
+  a part and its `at` changes; drag a hinge (`at` of the joint) and the
+  editor writes compensating offsets into the joint's parts and child
+  joints so only the hinge moves, not the picture. Animation tracks never
+  touch rig offsets — retuning a rig does not disturb a performance.
 
 ## Tracks
 
